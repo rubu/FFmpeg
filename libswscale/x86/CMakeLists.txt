@@ -1,0 +1,10 @@
+list(APPEND SWSCALE_X86_SOURCE_FILES x86/rgb2rgb.c x86/swscale.c x86/yuv2rgb.c)
+if (HAVE_MMXEXT)
+    list(APPEND SWSCALE_X86_SOURCE_FILES x86/hscale_fast_bilinear_simd.c)
+endif ()
+if (${HAVE_X86ASM})
+    list(APPEND SWSCALE_ASSEMBLY_SOURCE_FILES x86/input.asm x86/output.asm x86/rgb_2_rgb.asm x86/scale.asm x86/yuv_2_rgb.asm)
+endif ()
+
+set(SWSCALE_X86_SOURCES "${SWSCALE_X86_SOURCE_FILES}" PARENT_SCOPE)
+set(SWSCALE_X86_ASSEMBLY_SOURCES "${SWSCALE_ASSEMBLY_SOURCE_FILES}" PARENT_SCOPE)

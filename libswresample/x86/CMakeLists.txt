@@ -1,0 +1,8 @@
+list(APPEND SWRESAMPLE_X86_SOURCE_FILES x86/audio_convert_init.c x86/rematrix_init.c x86/resample_init.c)
+
+if (${HAVE_X86ASM})
+    list(APPEND SWRESAMPLE_X86_ASSEMBLY_FILES x86/audio_convert.asm x86/rematrix.asm x86/resample.asm)
+endif (${HAVE_X86ASM})
+
+set(SWRESAMPLE_X86_SOURCES "${SWRESAMPLE_X86_SOURCE_FILES}" PARENT_SCOPE)
+set(SWRESAMPLE_X86_ASSEMBLY_SOURCES "${SWRESAMPLE_X86_ASSEMBLY_FILES}" PARENT_SCOPE)
