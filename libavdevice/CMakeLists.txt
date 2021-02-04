@@ -135,6 +135,6 @@ install(TARGETS avdevice
         DESTINATION include/libavdevice
     RUNTIME
 )
-if (WIN32)
+if (WIN32 AND "${LIBRARY_TYPE}" STREQUAL "SHARED")
     install(FILES $<TARGET_PDB_FILE:${PROJECT_NAME}> DESTINATION bin OPTIONAL)
 endif ()

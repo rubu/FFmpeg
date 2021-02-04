@@ -43,6 +43,6 @@ install(TARGETS avresample
         DESTINATION include/libavresample
     RUNTIME
 )
-if (WIN32)
+if (WIN32 AND "${LIBRARY_TYPE}" STREQUAL "SHARED")
     install(FILES $<TARGET_PDB_FILE:avresample> DESTINATION bin OPTIONAL)
 endif ()

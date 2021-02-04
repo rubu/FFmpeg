@@ -49,6 +49,6 @@ install(TARGETS swscale
         DESTINATION include/libswscale
     RUNTIME
 )
-if (WIN32)
+if (WIN32 AND "${LIBRARY_TYPE}" STREQUAL "SHARED")
     install(FILES $<TARGET_PDB_FILE:swscale> DESTINATION bin OPTIONAL)
 endif ()

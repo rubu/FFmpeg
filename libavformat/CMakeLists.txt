@@ -2240,6 +2240,6 @@ install(TARGETS avformat
 		DESTINATION include/libavformat
 	RUNTIME
 )
-if (WIN32)
+if (WIN32 AND "${LIBRARY_TYPE}" STREQUAL "SHARED")
     install(FILES $<TARGET_PDB_FILE:avformat> DESTINATION bin OPTIONAL)
 endif ()

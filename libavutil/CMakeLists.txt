@@ -214,6 +214,6 @@ install(TARGETS avutil
         DESTINATION include/libavutil
     RUNTIME
 )
-if (WIN32)
+if (WIN32 AND "${LIBRARY_TYPE}" STREQUAL "SHARED")
     install(FILES $<TARGET_PDB_FILE:avutil> DESTINATION bin OPTIONAL)
 endif ()

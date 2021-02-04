@@ -157,8 +157,8 @@ option(DISABLE_FFMPEG "Disable ffmpeg" OFF)
 option(DISABLE_ASM "Disable all assembly optimizations" OFF)
 option(ENABLE_FREIOR "Enable Frei0r" OFF)
 
-#set(LIBRARY_TYPE "STATIC")
-set(LIBRARY_TYPE "SHARED")
+set(LIBRARY_TYPE "STATIC")
+#set(LIBRARY_TYPE "SHARED")
 if (${LIBRARY_TYPE} STREQUAL "SHARED")
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 endif ()
@@ -921,6 +921,7 @@ set(HAVE_NAMES STRUCT_POLLFD
     PTHREADS
     POLL_H
     OPENGL_GL3_H
+    WINDOWS_H
 )
 
 create_variables(HAVE "${HAVE_NAMES}")
@@ -930,6 +931,7 @@ check_header(PTHREADS "pthread.h")
 check_header(POLL_H "poll.h")
 check_header(OPENGL_GL3_H "OpenGL/gl3.h")
 check_header(UNISTD_H "unistd.h")
+check_header(WINDOWS_H "windows.h")
 
 # If asm is disabled then external asm support is not available
 if (DISABLE_ASM)
@@ -1486,6 +1488,12 @@ if (NOT ENABLE_X11)
 endif ()
 if (NOT ENABLE_LIBSDL)
     set(CONFIG_SDL2_OUTDEV 0)
+endif ()
+if (NOT APPLE)
+    set(CONFIG_AUDIOTOOLBOX_OUTDEV 0)
+endif ()
+if (WIN32)
+    set(CONFIG_OPENGL_OUTDEV 0)
 endif ()
 
 file(WRITE libavdevice/outdev_list.c "static const AVOutputFormat * const outdev_list[] = {\n")

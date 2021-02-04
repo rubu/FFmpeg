@@ -43,6 +43,6 @@ install(TARGETS swresample
         DESTINATION include/libswresample
     RUNTIME
 )
-if (WIN32)
+if (WIN32 AND "${LIBRARY_TYPE}" STREQUAL "SHARED")
     install(FILES $<TARGET_PDB_FILE:swresample> DESTINATION bin OPTIONAL)
 endif ()

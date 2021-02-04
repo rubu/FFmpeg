@@ -3018,6 +3018,6 @@ install(TARGETS avcodec
         DESTINATION include/libavcodec
     RUNTIME
 )
-if (WIN32)
+if (WIN32 AND "${LIBRARY_TYPE}" STREQUAL "SHARED")
     install(FILES $<TARGET_PDB_FILE:avcodec> DESTINATION bin OPTIONAL)
 endif ()

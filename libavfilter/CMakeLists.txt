@@ -1442,6 +1442,6 @@ install(TARGETS avfilter
         DESTINATION include/libavfilter
     RUNTIME
 )
-if (WIN32)
+if (WIN32 AND "${LIBRARY_TYPE}" STREQUAL "SHARED")
     install(FILES $<TARGET_PDB_FILE:avfilter> DESTINATION bin OPTIONAL)
 endif ()
