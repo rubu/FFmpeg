@@ -142,9 +142,9 @@ endmacro ()
 
 macro (check_header NAME PATH)
     find_path(${NAME} ${PATH})
-    set(HAS_${NAME} 1)
+    set(HAVE_${NAME} 1)
     if (${NAME} STREQUAL "${NAME}-NOTFOUND")
-        set(HAS_${NAME} 0)
+        set(HAVE_${NAME} 0)
     endif ()
 endmacro ()
 
@@ -470,7 +470,7 @@ set(CONFIG_AVISYNTH_DEMUXER 0)
 
 include(FindLibXml2)
 
-if (LibXml2_FOUND)
+if (NOT LibXml2_FOUND)
     # dash demuxer pulls in libxml
     set(CONFIG_DASH_DEMUXER 0)
 endif ()
@@ -929,6 +929,7 @@ create_variables(HAVE "${HAVE_NAMES}")
 check_header(PTHREADS "pthread.h")
 check_header(POLL_H "poll.h")
 check_header(OPENGL_GL3_H "OpenGL/gl3.h")
+check_header(UNISTD_H "unistd.h")
 
 # If asm is disabled then external asm support is not available
 if (DISABLE_ASM)
