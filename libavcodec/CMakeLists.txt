@@ -10,7 +10,7 @@ if (HAS_MFT)
     list(APPEND EXTERNAL_LIBRARIES mf mfreadwrite mfplat mfuuid Strmiids)
 endif ()
 
-if (HAS_ZLIB)
+if (ZLIB_FOUND)
     list(APPEND EXTERNAL_LIBRARIES ${ZLIB_LIBRARIES})
 endif ()
 

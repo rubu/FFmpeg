@@ -174,7 +174,6 @@ set(NASM_PATH "")
 set(EXTERN_PREFIX "")
 
 include(FindZLIB)
-set(HAS_ZLIB ZLIB_FOUND)
 
 # detect this from presence of avx
 set(EXTERNAL_XOP 1)
@@ -470,8 +469,8 @@ set(CONFIG_CODEC2RAW_DEMUXER 0)
 set(CONFIG_AVISYNTH_DEMUXER 0)
 
 include(FindLibXml2)
-set(HAS_LIBXML LibXml2_FOUND)
-if (NOT HAS_LIBXML)
+
+if (LibXml2_FOUND)
     # dash demuxer pulls in libxml
     set(CONFIG_DASH_DEMUXER 0)
 endif ()
@@ -579,7 +578,7 @@ if (NOT ENABLE_LIBFDK_AAC)
     set(CONFIG_LIBFDK_AAC_ENCODER 0)
 endif ()
 
-if (NOT HAS_ZLIB)
+if (NOT ZLIB_FOUND)
     set(CONFIG_TIFF_ENCODER 0)
     set(CONFIG_ZLIB_ENCODER 0)
 endif ()
@@ -692,7 +691,7 @@ if (NOT ENABLE_LIBFDK_AAC)
     set(CONFIG_LIBFDK_AAC_DECODER 0)
 endif ()
 
-if (NOT HAS_ZLIB)
+if (NOT ZLIB_FOUND)
     set(CONFIG_DXA_DECODER 0)
     set(CONFIG_SCREENPRESSO_DECODER 0)
     set(CONFIG_TSCC_DECODER 0)
