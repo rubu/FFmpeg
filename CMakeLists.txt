@@ -157,8 +157,9 @@ option(DISABLE_FFMPEG "Disable ffmpeg" OFF)
 option(DISABLE_ASM "Disable all assembly optimizations" OFF)
 option(ENABLE_FREIOR "Enable Frei0r" OFF)
 
-set(LIBRARY_TYPE "STATIC")
-#set(LIBRARY_TYPE "SHARED")
+set(LIBRARY_TYPE "STATIC" CACHE STRING "Library type to be built")
+set_property(CACHE LIBRARY_TYPE PROPERTY STRINGS SHARED STATIC)
+
 if (${LIBRARY_TYPE} STREQUAL "SHARED")
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 endif ()
