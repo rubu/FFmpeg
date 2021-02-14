@@ -154,6 +154,7 @@ option(DISABLE_AVUTIL "Disable avutil" OFF)
 option(DISABLE_AVFORMAT "Disable avformat" OFF)
 option(DISABLE_FFPLAY "Disable ffplay" OFF)
 option(DISABLE_FFMPEG "Disable ffmpeg" OFF)
+option(DISABLE_FFPROBE "Disable ffprobe" OFF)
 option(DISABLE_ASM "Disable all assembly optimizations" OFF)
 option(ENABLE_FREIOR "Enable Frei0r" OFF)
 
@@ -1592,4 +1593,16 @@ if (NOT DISABLE_FFPLAY)
     add_executable(ffplay ${FFPLAY_SOURCES} ${FFPLAY_HEADERS} ${GENERATED_CONFIG_HEADERS} ${GENERATED_VERSION_HEADERS})
     target_include_directories(ffplay PRIVATE ${CMAKE_SOURCE_DIR})
     target_link_libraries(ffplay avformat avcodec postproc avresample avfilter avdevice swscale swresample avutil SDL2::SDL2main SDL2::SDL2-static)
+endif ()
+
+if (NOT DISABLE_FFPROBE)
+    set(FFPROBE_SOURCES fftools/ffprobe.c
+        fftools/cmdutils.c
+    )
+
+    set(FFPROBE_HEADERS fftools/cmdutils.h)
+
+    add_executable(ffprobe ${FFPROBE_SOURCES} ${FFPROBE_HEADERS} ${GENERATED_CONFIG_HEADERS} ${GENERATED_VERSION_HEADERS})
+    target_include_directories(ffprobe PRIVATE ${CMAKE_SOURCE_DIR})
+    target_link_libraries(ffprobe avformat avcodec postproc avresample avfilter avdevice swscale swresample avutil)
 endif ()
