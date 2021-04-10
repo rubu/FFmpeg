@@ -126,6 +126,7 @@ extern AVFilter ff_af_lowpass;
 extern AVFilter ff_af_lowshelf;
 extern AVFilter ff_af_lv2;
 extern AVFilter ff_af_mcompand;
+extern AVFilter ff_af_mozilladeepspeech;
 extern AVFilter ff_af_pan;
 extern AVFilter ff_af_replaygain;
 extern AVFilter ff_af_resample;
