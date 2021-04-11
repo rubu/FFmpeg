@@ -645,6 +645,31 @@ static int configure_output_audio_filter(FilterGraph *fg, OutputFilter *ofilter,
     return 0;
 }
 
+static int configure_output_subtilte_filter(FilterGraph* fg, OutputFilter* ofilter, AVFilterInOut* out)
+{
+    char* pix_fmts;
+    OutputStream* ost = ofilter->ost;
+    OutputFile* of = output_files[ost->file_index];
+    AVFilterContext* last_filter = out->filter_ctx;
+    int pad_idx = out->pad_idx;
+    int ret;
+    char name[255];
+
+    snprintf(name, sizeof(name), "out_%d_%d", ost->file_index, ost->index);
+    ret = avfilter_graph_create_filter(&ofilter->filter,
+        avfilter_get_by_name("sbuffersink"),
+        name, NULL, NULL, fg->graph);
+
+    if (ret < 0)
+        return ret;
+
+    pad_idx = 0;
+
+    if ((ret = avfilter_link(last_filter, pad_idx, ofilter->filter, 0)) < 0)
+        return ret;
+    return 0;
+}
+
 static int configure_output_filter(FilterGraph *fg, OutputFilter *ofilter,
                                    AVFilterInOut *out)
 {
@@ -656,6 +681,7 @@ static int configure_output_filter(FilterGraph *fg, OutputFilter *ofilter,
     switch (avfilter_pad_get_type(out->filter_ctx->output_pads, out->pad_idx)) {
     case AVMEDIA_TYPE_VIDEO: return configure_output_video_filter(fg, ofilter, out);
     case AVMEDIA_TYPE_AUDIO: return configure_output_audio_filter(fg, ofilter, out);
+    case AVMEDIA_TYPE_SUBTITLE: return configure_output_subtilte_filter(fg, ofilter, out);
     default: av_assert0(0);
     }
 }

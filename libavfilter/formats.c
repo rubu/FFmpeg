@@ -360,6 +360,8 @@ AVFilterFormats *ff_all_formats(enum AVMediaType type)
                 return NULL;
             fmt++;
         }
+    } else if (type == AVMEDIA_TYPE_SUBTITLE) {
+        ret = av_mallocz(sizeof(*ret));
     }
 
     return ret;

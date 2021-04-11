@@ -331,6 +331,9 @@ static int filter_link_check_formats(void *log, AVFilterLink *link, AVFilterForm
             return ret;
         break;
 
+    case AVMEDIA_TYPE_SUBTITLE:
+        return 0;
+
     default:
         av_assert0(!"reached");
     }
@@ -548,6 +551,8 @@ static int query_formats(AVFilterGraph *graph, AVClass *log_ctx)
                                                             inst_name, graph->aresample_swr_opts,
                                                             NULL, graph)) < 0)
                         return ret;
+                    break;
+                case AVMEDIA_TYPE_SUBTITLE:
                     break;
                 default:
                     return AVERROR(EINVAL);

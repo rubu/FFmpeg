@@ -15,7 +15,7 @@ typedef struct MozillaDeepSpeechContext {
 #define A AV_OPT_FLAG_AUDIO_PARAM|AV_OPT_FLAG_FILTERING_PARAM
 
 static const AVOption mozilladeepspeech_options[] = {
-    { "model", "path to model file", OFFSET(model), AV_OPT_TYPE_STRING, { .str = "" }, 0, 0, A },
+    { "model", "path to model file", OFFSET(model_path), AV_OPT_TYPE_STRING, { .str = "" }, 0, 0, A },
     { NULL }
 };
 
@@ -53,8 +53,8 @@ static int query_formats(AVFilterContext *filter_context)
     ret = ff_set_common_formats(filter_context, formats);
     if (ret < 0)
         return ret;
-    layouts = ff_make_format64_list(channel_layouts);
 
+    layouts = ff_make_format64_list(channel_layouts);
     if (!layouts)
         return AVERROR(ENOMEM);
     ret = ff_set_common_channel_layouts(filter_context, layouts);
@@ -72,10 +72,20 @@ static int request_frame(AVFilterLink *outlink)
     return 0;
 }
 
+static int activate(AVFilterContext* ctx)
+{
+    return 0;
+}
+
 static av_cold int init(AVFilterContext *filter_context)
 {
     MozillaDeepSpeechContext *context = filter_context->priv;
 
+    if (context->model_path == NULL) {
+        av_log(filter_context, AV_LOG_ERROR,
+            "Model not specified.\n");
+        return AVERROR(EINVAL);
+    }
     if (DS_CreateModel(context->model_path, &context->model) != 0) {
         av_log(filter_context, AV_LOG_ERROR,
             "Failed to open model %s.\n", context->model_path);
@@ -105,12 +115,6 @@ static const AVFilterPad mozilladeepspeech_inputs[] = {
 static const AVFilterPad mozilladeepspeech_outputs[] = {
     {
         .name          = "default",
-        .type          = AVMEDIA_TYPE_AUDIO,
-        .request_frame = request_frame,
-        .config_props  = config_output,
-    },
-    {
-        .name          = "text",
         .type          = AVMEDIA_TYPE_SUBTITLE,
         .request_frame = request_frame,
         .config_props  = config_output,
@@ -125,6 +129,7 @@ AVFilter ff_af_mozilladeepspeech = {
     .query_formats  = query_formats,
     .priv_size      = sizeof(MozillaDeepSpeechContext),
     .priv_class     = &mozilladeepspeech_class,
+    .activate       = activate,
     .init           = init,
     .uninit         = uninit,
     .inputs         = mozilladeepspeech_inputs,

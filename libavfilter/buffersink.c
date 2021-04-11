@@ -306,6 +306,11 @@ static int asink_query_formats(AVFilterContext *ctx)
     return 0;
 }
 
+static int ssink_query_formats(AVFilterContext *ctx)
+{
+    return 0;
+}
+
 #define OFFSET(x) offsetof(BufferSinkContext, x)
 #define FLAGS AV_OPT_FLAG_FILTERING_PARAM|AV_OPT_FLAG_VIDEO_PARAM
 static const AVOption buffersink_options[] = {
@@ -324,8 +329,12 @@ static const AVOption abuffersink_options[] = {
 };
 #undef FLAGS
 
+static const AVOption sbuffersink_options[] = {
+    { NULL }
+};
 AVFILTER_DEFINE_CLASS(buffersink);
 AVFILTER_DEFINE_CLASS(abuffersink);
+AVFILTER_DEFINE_CLASS(sbuffersink);
 
 static const AVFilterPad avfilter_vsink_buffer_inputs[] = {
     {
@@ -364,5 +373,25 @@ AVFilter ff_asink_abuffer = {
     .query_formats = asink_query_formats,
     .activate      = activate,
     .inputs        = avfilter_asink_abuffer_inputs,
+    .outputs       = NULL,
+};
+
+static const AVFilterPad avfilter_ssink_sbuffer_inputs[] = {
+    {
+        .name = "default",
+        .type = AVMEDIA_TYPE_SUBTITLE,
+    },
+    { NULL }
+};
+
+AVFilter ff_ssink_sbuffer = {
+    .name          = "sbuffersink",
+    .description   = NULL_IF_CONFIG_SMALL("Buffer subtitle frames, and make them available to the end of the filter graph."),
+    .priv_class    = &sbuffersink_class,
+    .priv_size     = sizeof(BufferSinkContext),
+    .init          = common_init,
+    .query_formats = ssink_query_formats,
+    .activate      = activate,
+    .inputs        = avfilter_ssink_sbuffer_inputs,
     .outputs       = NULL,
 };
