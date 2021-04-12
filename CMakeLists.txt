@@ -1147,6 +1147,7 @@ else ()
     message(FATAL_ERROR "unsupported target architecture ${CMAKE_SYSTEM_PROCESSOR}")
 endif ()
 
+set(HAVE_GETSYSTEMTIMEASFILETIME 0)
 if (WIN32)
     add_compile_definitions(SLIBSUF=".dll")
     set(NASM_PATH "C:\\Program Files\\NASM")
