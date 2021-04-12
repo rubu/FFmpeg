@@ -33,38 +33,49 @@ static int filter_frame(AVFilterLink *inlink, AVFrame *in)
 
 static int query_formats(AVFilterContext *filter_context)
 {
-    static int64_t channel_layouts[] = {
+    static int64_t in_raw_channel_layouts[] = {
         AV_CH_LAYOUT_MONO,
         -1,
     };
-    static const enum AVSampleFormat sample_fmts[] = {
+    static const enum AVSampleFormat in_sample_fmts[] = {
         AV_SAMPLE_FMT_S16P,
         AV_SAMPLE_FMT_NONE
     };
+    static int out_char_encs[] = {
+        FF_SUB_CHARENC_MODE_IGNORE,
+        -1
+    };
     MozillaDeepSpeechContext *context = filter_context->priv;
-    int sample_rates[] = { DS_GetModelSampleRate(context->model), -1 };
-    AVFilterFormats* formats;
-    AVFilterChannelLayouts* layouts;
+    int in_sample_rates[] = { DS_GetModelSampleRate(context->model), -1 };
+    AVFilterFormats *in_formats, *out_formats;
+    AVFilterChannelLayouts *in_channel_layouts;
     int ret;
 
-    formats = ff_make_format_list(sample_fmts);
-    if (!formats)
+    in_formats = ff_make_format_list(in_sample_fmts);
+    if (!in_formats)
         return AVERROR(ENOMEM);
-    ret = ff_set_common_formats(filter_context, formats);
+    ret = ff_formats_ref(in_formats, &filter_context->inputs[0]->outcfg.formats);
     if (ret < 0)
         return ret;
 
-    layouts = ff_make_format64_list(channel_layouts);
-    if (!layouts)
+    in_channel_layouts = ff_make_format64_list(in_raw_channel_layouts);
+    if (!in_channel_layouts)
         return AVERROR(ENOMEM);
-    ret = ff_set_common_channel_layouts(filter_context, layouts);
+    ret = ff_channel_layouts_ref(in_channel_layouts, &filter_context->inputs[0]->outcfg.channel_layouts);
     if (ret < 0)
         return ret;
 
-    formats = ff_make_format_list(sample_rates);
-    if (!formats)
+    in_formats = ff_make_format_list(in_sample_rates);
+    if (!in_formats)
         return AVERROR(ENOMEM);
-    return ff_set_common_samplerates(filter_context, formats);
+    ret = ff_formats_ref(in_formats, &filter_context->inputs[0]->outcfg.samplerates);
+    if (ret < 0)
+        return ret;
+
+    out_formats = ff_make_format_list(out_char_encs);
+    if (!out_formats)
+        return AVERROR(ENOMEM);
+    return ff_formats_ref(out_formats, &filter_context->outputs[0]->incfg.formats);
 }
 
 static int request_frame(AVFilterLink *outlink)

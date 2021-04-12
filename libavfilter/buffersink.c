@@ -308,7 +308,16 @@ static int asink_query_formats(AVFilterContext *ctx)
 
 static int ssink_query_formats(AVFilterContext *ctx)
 {
-    return 0;
+    static int in_char_encs[] = {
+        FF_SUB_CHARENC_MODE_IGNORE,
+        -1
+    };
+    AVFilterFormats *in_formats;
+
+    in_formats = ff_make_format_list(in_char_encs);
+    if (!in_formats)
+        return AVERROR(ENOMEM);
+    return ff_formats_ref(in_formats, &ctx->inputs[0]->outcfg.formats);
 }
 
 #define OFFSET(x) offsetof(BufferSinkContext, x)
