@@ -941,6 +941,11 @@ check_header(UNISTD_H "unistd.h")
 check_header(WINDOWS_H "windows.h")
 
 # If asm is disabled then external asm support is not available
+if (${CMAKE_GENERATOR} STREQUAL "Xcode")
+    message("Disabling assembly since currently there is no nice way to integrate nasm into Xcode")
+    set(DISABLE_ASM 1)
+endif ()
+
 if (DISABLE_ASM)
     set(HAVE_AMD3DNOW_EXTERNAL 0)
     set(HAVE_AMD3DNOWEXT_EXTERNAL 0)
